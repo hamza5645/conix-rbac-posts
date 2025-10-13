@@ -1,25 +1,14 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  Unique,
-} from 'typeorm';
+import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { User } from './user.entity';
 import { Role } from '../../roles/entities/role.entity';
 
 @Entity({ name: 'user_roles' })
-@Unique(['userId', 'roleId'])
 export class UserRole {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryColumn({ name: 'user_id', type: 'int' })
+  userId: number;
 
-  @Column({ name: 'user_id', type: 'uuid' })
-  userId: string;
-
-  @Column({ name: 'role_id', type: 'uuid' })
-  roleId: string;
+  @PrimaryColumn({ name: 'role_id', type: 'int' })
+  roleId: number;
 
   @ManyToOne(() => User, (user) => user.userRoles, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })

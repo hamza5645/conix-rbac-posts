@@ -1,25 +1,14 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  Unique,
-} from 'typeorm';
+import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { Role } from './role.entity';
 import { Permission } from '../../permissions/entities/permission.entity';
 
 @Entity({ name: 'role_permissions' })
-@Unique(['roleId', 'permissionId'])
 export class RolePermission {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryColumn({ name: 'role_id', type: 'int' })
+  roleId: number;
 
-  @Column({ name: 'role_id', type: 'uuid' })
-  roleId: string;
-
-  @Column({ name: 'permission_id', type: 'uuid' })
-  permissionId: string;
+  @PrimaryColumn({ name: 'permission_id', type: 'int' })
+  permissionId: number;
 
   @ManyToOne(() => Role, (role) => role.rolePermissions, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'role_id' })

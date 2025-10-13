@@ -5,13 +5,14 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  RelationId,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 
 @Entity({ name: 'posts' })
 export class Post {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column({ length: 200 })
   title: string;
@@ -22,10 +23,13 @@ export class Post {
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @Column({ name: 'author_id', type: 'uuid', nullable: true })
-  authorId: string | null;
-
-  @ManyToOne(() => User, (user) => user.posts, { onDelete: 'SET NULL' })
+  @ManyToOne(() => User, (user) => user.posts, {
+    onDelete: 'CASCADE',
+    nullable: false,
+  })
   @JoinColumn({ name: 'author_id' })
-  author: User | null;
+  author: User;
+
+  @RelationId((post: Post) => post.author)
+  authorId: number;
 }
