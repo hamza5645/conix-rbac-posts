@@ -5,6 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { typeOrmConfig } from './database/typeorm.config';
+import { UsersModule } from './users/users.module';
+import { RolesModule } from './roles/roles.module';
+import { PostsModule } from './posts/posts.module';
 
 @Module({ //Module decorator
   imports: [ //imports the config module and the typeorm module
@@ -14,6 +17,9 @@ import { typeOrmConfig } from './database/typeorm.config';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => typeOrmConfig(config),
     }),
+    UsersModule,
+    RolesModule,
+    PostsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
