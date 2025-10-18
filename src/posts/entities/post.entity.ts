@@ -14,10 +14,10 @@ export class Post {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 200 })
+  @Column({ type: 'varchar', length: 200 })
   title: string;
 
-  @Column('text')
+  @Column({ type: 'text' })
   content: string;
 
   @CreateDateColumn({ name: 'created_at' })

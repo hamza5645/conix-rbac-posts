@@ -13,16 +13,16 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 120 })
+  @Column({ type: 'varchar', length: 120 })
   name: string;
 
-  @Column({ length: 150, unique: true })
+  @Column({ type: 'varchar', length: 150, unique: true })
   email: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   password: string;
 
-  @Column({ default: true })
+  @Column({ name: 'is_active', type: 'boolean', default: true })
   isActive: boolean;
 
   @CreateDateColumn({ name: 'created_at' })
