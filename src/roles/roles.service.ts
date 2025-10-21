@@ -17,4 +17,10 @@ export class RolesService {
       .where('role.id = :id', { id })
       .getOne();
   }
+
+  async findAll(): Promise<Role[]> {
+    return this.rolesRepository.find({
+      relations: ['permissions'],
+    });
+  }
 }

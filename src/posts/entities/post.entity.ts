@@ -5,7 +5,6 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-  RelationId,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 
@@ -20,6 +19,9 @@ export class Post {
   @Column({ type: 'text' })
   content: string;
 
+  @Column({ name: 'author_id', type: 'int' })
+  authorId: number;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
@@ -29,7 +31,4 @@ export class Post {
   })
   @JoinColumn({ name: 'author_id' })
   author: User;
-
-  @RelationId((post: Post) => post.author)
-  authorId: number;
 }

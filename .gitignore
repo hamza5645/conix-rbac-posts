@@ -64,3 +64,5 @@ NestJS_TypeORM_Task.pdf
 .kiro/steering/structure.md
 .kiro/steering/tech.md
 .vscode/settings.json
+RBAC_SETUP_SUMMARY.md
+.kiro/specs/rbac-database-design/design.md

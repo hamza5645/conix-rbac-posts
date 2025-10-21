@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { typeOrmConfig } from './database/typeorm.config';
 import { UsersModule } from './users/users.module';
 import { RolesModule } from './roles/roles.module';
+import { PermissionsModule } from './permissions/permissions.module';
 import { PostsModule } from './posts/posts.module';
 
 @Module({ //Module decorator
@@ -19,6 +20,7 @@ import { PostsModule } from './posts/posts.module';
     }),
     UsersModule,
     RolesModule,
+    PermissionsModule,
     PostsModule,
   ],
   controllers: [AppController],
