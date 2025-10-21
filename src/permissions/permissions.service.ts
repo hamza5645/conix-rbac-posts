@@ -12,14 +12,14 @@ export class PermissionsService {
 
   async findAll(): Promise<Permission[]> {
     return this.permissionsRepository.find({
-      relations: ['rolePermissions', 'rolePermissions.role'],
+      relations: ['roles'],
     });
   }
 
   async findOne(id: number): Promise<Permission | null> {
     return this.permissionsRepository.findOne({
       where: { id },
-      relations: ['rolePermissions', 'rolePermissions.role'],
+      relations: ['roles'],
     });
   }
 }
