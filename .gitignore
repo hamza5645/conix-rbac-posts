@@ -57,3 +57,10 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 # docs and assignments
 NestJS_TypeORM_Task.pdf
+.kiro/specs/advanced-rbac-system/design.md
+.kiro/specs/advanced-rbac-system/requirements.md
+.kiro/specs/advanced-rbac-system/tasks.md
+.kiro/steering/product.md
+.kiro/steering/structure.md
+.kiro/steering/tech.md
+.vscode/settings.json
