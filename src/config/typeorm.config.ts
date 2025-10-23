@@ -31,7 +31,7 @@ export const typeOrmConfig = (
     username: config.getOrThrow<string>('DB_USERNAME'),
     password: config.getOrThrow<string>('DB_PASSWORD'),
     database: config.getOrThrow<string>('DB_NAME'),
-    entities: [join(__dirname, '/../**/*.entity.{ts,js}')],
+    entities: [join(__dirname, '/../modules/**/*.entity.{ts,js}')],
     migrations: [join(__dirname, '/../database/migrations/*.{ts,js}')],
     synchronize: parseBoolean(config.get('DB_SYNC'), false),
     logging: parseBoolean(config.get('DB_LOGGING'), true),

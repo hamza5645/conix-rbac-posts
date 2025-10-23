@@ -2,7 +2,7 @@ import 'reflect-metadata'; //Enables reflection api for TypeORM
 import { DataSource, DataSourceOptions } from 'typeorm'; //Datasource class
 import { config as loadEnv } from 'dotenv'; //import conifg and load env 
 import { ConfigService } from '@nestjs/config'; //import config service
-import { typeOrmConfig } from './src/database/typeorm.config'; //import typeorm config
+import { typeOrmConfig } from './src/config/typeorm.config'; //import typeorm config
 
 loadEnv();
 

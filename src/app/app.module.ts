@@ -4,11 +4,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { typeOrmConfig } from './database/typeorm.config';
-import { UsersModule } from './users/users.module';
-import { RolesModule } from './roles/roles.module';
-import { PermissionsModule } from './permissions/permissions.module';
-import { PostsModule } from './posts/posts.module';
+import { typeOrmConfig } from '../config/typeorm.config';
+import { UsersModule } from '../modules/users/users.module';
+import { RolesModule } from '../modules/roles/roles.module';
+import { PermissionsModule } from '../modules/permissions/permissions.module';
+import { PostsModule } from '../modules/posts/posts.module';
 
 @Module({ //Module decorator
   imports: [ //imports the config module and the typeorm module

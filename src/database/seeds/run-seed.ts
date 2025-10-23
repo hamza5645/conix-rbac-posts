@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { config as loadEnv } from 'dotenv';
 import { ConfigService } from '@nestjs/config';
-import { typeOrmConfig } from '../typeorm.config';
+import { typeOrmConfig } from '../../config/typeorm.config';
 import { seedDatabase } from './seed';
 
 loadEnv();
