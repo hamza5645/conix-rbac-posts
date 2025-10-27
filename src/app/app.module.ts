@@ -7,6 +7,7 @@ import { UsersModule } from '../modules/users/users.module';
 import { RolesModule } from '../modules/roles/roles.module';
 import { PermissionsModule } from '../modules/permissions/permissions.module';
 import { PostsModule } from '../modules/posts/posts.module';
+import { AuthModule } from '../modules/auth/auth.module';
 
 @Module({ //Module decorator
   imports: [ //imports the config module and the typeorm module
@@ -16,6 +17,7 @@ import { PostsModule } from '../modules/posts/posts.module';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => typeOrmConfig(config),
     }),
+    AuthModule,
     UsersModule,
     RolesModule,
     PermissionsModule,

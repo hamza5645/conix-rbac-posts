@@ -57,6 +57,88 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+## Authentication
+
+This project includes JWT-based authentication with access and refresh tokens using Passport.js.
+
+### Environment Variables
+
+Add the following variables to your `.env` file:
+
+```env
+JWT_SECRET=your-secret-key-here
+JWT_EXPIRES_IN=15m
+JWT_REFRESH_SECRET=your-refresh-secret-key-here
+JWT_REFRESH_EXPIRES_IN=7d
+```
+
+### Available Authentication Endpoints
+
+- `POST /auth/register` - Register a new user
+- `POST /auth/login` - Login with email and password
+- `POST /auth/refresh` - Refresh access token using refresh token
+
+### Protecting Routes
+
+To protect routes with JWT authentication, use the `JwtAuthGuard`:
+
+```typescript
+import { Controller, Get, UseGuards, Request } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+
+@Controller('posts')
+export class PostsController {
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  findAll(@Request() req) {
+    // req.user contains { userId, email, roles }
+    return this.postsService.findAll();
+  }
+}
+```
+
+### Example Usage
+
+**Register:**
+
+```bash
+curl -X POST http://localhost:3000/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "password123"
+  }'
+```
+
+**Login:**
+
+```bash
+curl -X POST http://localhost:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "john@example.com",
+    "password": "password123"
+  }'
+```
+
+**Access Protected Route:**
+
+```bash
+curl -X GET http://localhost:3000/posts \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+**Refresh Token:**
+
+```bash
+curl -X POST http://localhost:3000/auth/refresh \
+  -H "Content-Type: application/json" \
+  -d '{
+    "refreshToken": "YOUR_REFRESH_TOKEN"
+  }'
+```
+
 ## Deployment
 
 When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
