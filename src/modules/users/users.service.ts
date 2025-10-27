@@ -30,4 +30,8 @@ export class UsersService {
       .where('user.id = :id', { id })
       .getOne();
   }
+
+  async findByEmail(email: string): Promise<User | null> {
+    return this.usersRepository.findOne({ where: { email } });
+  }
 }
