@@ -9,26 +9,32 @@ services:
         value: production
       - key: PORT
         value: 3000
-      - key: DATABASE_HOST
+      - key: DB_TYPE
+        value: postgres
+      - key: DB_HOST
         fromDatabase:
           name: conix-postgres
           property: host
-      - key: DATABASE_PORT
+      - key: DB_PORT
         fromDatabase:
           name: conix-postgres
           property: port
-      - key: DATABASE_USER
+      - key: DB_USERNAME
         fromDatabase:
           name: conix-postgres
           property: user
-      - key: DATABASE_PASSWORD
+      - key: DB_PASSWORD
         fromDatabase:
           name: conix-postgres
           property: password
-      - key: DATABASE_NAME
+      - key: DB_NAME
         fromDatabase:
           name: conix-postgres
           property: database
+      - key: DB_SYNC
+        value: false
+      - key: DB_LOGGING
+        value: false
       - key: JWT_SECRET
         generateValue: true
       - key: JWT_REFRESH_SECRET
