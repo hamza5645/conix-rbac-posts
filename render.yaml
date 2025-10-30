@@ -2,7 +2,7 @@ services:
   - type: web
     name: conix-rbac-api
     runtime: node
-    buildCommand: npm ci && npm run build
+    buildCommand: npm ci --include=dev && npm run build
     startCommand: node dist/src/main.js
     envVars:
       - key: NODE_ENV
