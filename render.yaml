@@ -1,0 +1,41 @@
+services:
+  - type: web
+    name: conix-rbac-api
+    runtime: node
+    buildCommand: npm install && npm run build
+    startCommand: npm run start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: DATABASE_HOST
+        fromDatabase:
+          name: conix-postgres
+          property: host
+      - key: DATABASE_PORT
+        fromDatabase:
+          name: conix-postgres
+          property: port
+      - key: DATABASE_USER
+        fromDatabase:
+          name: conix-postgres
+          property: user
+      - key: DATABASE_PASSWORD
+        fromDatabase:
+          name: conix-postgres
+          property: password
+      - key: DATABASE_NAME
+        fromDatabase:
+          name: conix-postgres
+          property: database
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+
+databases:
+  - name: conix-postgres
+    databaseName: conix_rbac
+    user: conix_user
+
