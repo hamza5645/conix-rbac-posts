@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
@@ -31,6 +31,22 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
+  async findAll(): Promise<User[]> {
+    return this.usersRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.roles', 'role')
+      .select([
+        'user.id',
+        'user.name',
+        'user.email',
+        'user.isActive',
+        'user.createdAt',
+        'role.id',
+        'role.name',
+      ])
+      .getMany();
+  }
+
   async findByEmail(email: string): Promise<User | null> {
     return this.usersRepository
       .createQueryBuilder('user')
@@ -46,5 +62,16 @@ export class UsersService {
       .leftJoinAndSelect('user.roles', 'role')
       .where('user.id = :id', { id })
       .getOne();
+  }
+
+  async remove(id: number): Promise<{ message: string }> {
+    const user = await this.usersRepository.findOne({ where: { id } });
+    
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    await this.usersRepository.remove(user);
+    return { message: `User with ID ${id} has been deleted successfully` };
   }
 }
