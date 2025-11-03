@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, In, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -11,24 +11,59 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
+    private readonly dataSource: DataSource,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const { roleIds, password, ...userData } = createUserDto;
-    
-    // Hash the password before saving
-    const hashedPassword = await bcrypt.hash(password, 10);
-    
-    const user = this.usersRepository.create({
-      ...userData,
-      password: hashedPassword,
+    const defaultRole = await this.dataSource.getRepository(Role).findOne({
+      where: { name: 'user' },
     });
 
-    if (roleIds && roleIds.length > 0) {
-      user.roles = roleIds.map((id) => ({ id } as Role));
+    if (!defaultRole) {
+      throw new NotFoundException('Default role "user" not found');
     }
 
-    return this.usersRepository.save(user);
+    const queryRunner = this.dataSource.createQueryRunner();
+
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      // Hash the password before saving
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const userRepository = queryRunner.manager.getRepository(User);
+      const roleRepository = queryRunner.manager.getRepository(Role);
+
+      const user = userRepository.create({
+        ...userData,
+        password: hashedPassword,
+      });
+
+      const roles: Role[] = [];
+      if (roleIds && roleIds.length > 0) {
+        const additionalRoles = await roleRepository.find({
+          where: { id: In(roleIds) },
+        });
+        roles.push(...additionalRoles);
+      }
+
+      const uniqueRoleIds = new Set<number>([
+        defaultRole.id,
+        ...roles.map((role) => role.id),
+      ]);
+      user.roles = Array.from(uniqueRoleIds).map((id) => ({ id } as Role));
+
+      const savedUser = await userRepository.save(user);
+      await queryRunner.commitTransaction();
+
+      return savedUser;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   async findAll(): Promise<User[]> {
