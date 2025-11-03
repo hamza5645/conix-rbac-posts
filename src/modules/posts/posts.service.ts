@@ -31,11 +31,12 @@ export class PostsService {
         'author.id',
         'author.name',
         'author.email',
-      ]);
+      ])
+      .where('post.isDeleted = :isDeleted', { isDeleted: false });
 
     // Apply search filter if search keyword is provided
     if (search) {
-      queryBuilder.where(
+      queryBuilder.andWhere(
         '(post.title ILIKE :search OR post.content ILIKE :search)',
         { search: `%${search}%` },
       );
@@ -81,6 +82,7 @@ export class PostsService {
       .createQueryBuilder('post')
       .leftJoinAndSelect('post.author', 'author')
       .where('post.id = :id', { id })
+      .andWhere('post.isDeleted = :isDeleted', { isDeleted: false })
       .getOne();
   }
 }

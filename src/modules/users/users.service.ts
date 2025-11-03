@@ -44,6 +44,7 @@ export class UsersService {
         'role.id',
         'role.name',
       ])
+      .where('user.isDeleted = :isDeleted', { isDeleted: false })
       .getMany();
   }
 
@@ -53,6 +54,7 @@ export class UsersService {
       .leftJoinAndSelect('user.roles', 'role')
       .leftJoinAndSelect('role.permissions', 'permission')
       .where('user.email = :email', { email })
+      .andWhere('user.isDeleted = :isDeleted', { isDeleted: false })
       .getOne();
   }
 
@@ -61,17 +63,26 @@ export class UsersService {
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.roles', 'role')
       .where('user.id = :id', { id })
+      .andWhere('user.isDeleted = :isDeleted', { isDeleted: false })
       .getOne();
   }
 
   async remove(id: number): Promise<{ message: string }> {
-    const user = await this.usersRepository.findOne({ where: { id } });
+    const user = await this.usersRepository.findOne({ 
+      where: { id, isDeleted: false } 
+    });
     
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
 
-    await this.usersRepository.remove(user);
+    // Use softRemove which sets deletedAt timestamp
+    const softRemovedUser = await this.usersRepository.softRemove(user);
+    
+    // Also update isDeleted flag for consistency
+    softRemovedUser.isDeleted = true;
+    await this.usersRepository.save(softRemovedUser);
+    
     return { message: `User with ID ${id} has been deleted successfully` };
   }
 }
